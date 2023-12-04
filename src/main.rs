@@ -6,6 +6,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use tokio::sync::Mutex;
 use std::sync::Arc;
 use tokio::task;
+use serde_json::json;
 
 #[tokio::main]
 async fn main() {
@@ -13,8 +14,6 @@ async fn main() {
 
     // Define multiple log groups and streams
     let log_targets = vec![
-        //("/aws/lambda/lasdtest", "tiootoo"),
-        //("/aws/lambda/lasdtest", "mylogstream"),
         ("tiopaco", "tiootoo"),
         ("tiopaco", "mylogstream"),
     ];
@@ -29,12 +28,20 @@ async fn main() {
 
             let mut events = Vec::new();
             // Create log events
-            for i in 0..1000 {
-                let message = format!("Test log message {}", i);
+            for i in 0..10000 {
                 let timestamp = SystemTime::now()
                     .duration_since(UNIX_EPOCH)
                     .expect("Time went backwards")
                     .as_millis() as i64; // CloudWatch expects the timestamp in milliseconds
+
+                // Creating a JSON object with i and timestamp
+                let inner_message = json!({
+                    "value": i,
+                    "timestamp": timestamp
+                });
+
+                // Serializing the inner JSON object to a string
+                let message = inner_message.to_string();
 
                 let event = InputLogEvent {
                     message,

@@ -9,3 +9,6 @@ edition = "2021"
 rusoto_core = "0.48.0"
 rusoto_logs = "0.48.0"
 tokio = { version = "1", features = ["full"] }
+serde = "1.0"
+serde_json = "1.0"
+serde_derive = "1.0"
